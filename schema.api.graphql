@@ -1,0 +1,21 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    getMyProfile: Profile!
+    getProfile(id: String!): Profile!
+}
+
+type Profile {
+    id: ID
+    name: String
+    image: String
+    bio: String
+    createdAt: AWSDateTime
+}
+
+type Mutation {
+    saveUser(id: ID): Boolean
+}

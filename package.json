@@ -1,0 +1,24 @@
+{
+  "name": "serverless-appsync-marketplace",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Backend for marketplace",
+  "main": "index.js",
+  "scripts": {
+    "sls": "sls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShariqAteeq/serverless-appsync-marketplace.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShariqAteeq/serverless-appsync-marketplace/issues"
+  },
+  "homepage": "https://github.com/ShariqAteeq/serverless-appsync-marketplace#readme",
+  "devDependencies": {
+    "serverless-appsync-plugin": "^1.12.1"
+  }
+}

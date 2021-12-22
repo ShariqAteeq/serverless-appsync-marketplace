@@ -1,0 +1,71 @@
+service: serverless-appsync-marketplace
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  region: eu-west-1
+  runtime: nodejs12.x
+
+plugins:
+  - serverless-appsync-plugin
+
+package:
+  exclude:
+    - package-lock.json
+    - package.json
+
+custom:
+  stage: ${opt:stage, self.provider.stage}
+  appSync:
+    - ${file(serverless.appsync-api.yml)}
+
+resources:
+ Resources:
+
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      Tags:
+        - Key: Environment
+          Value: value
+
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
+      UsernameAttributes:
+        - email
+      Schema:
+        - AttributeDataType: String
+          Name: name
+          Required: false
+          Mutable: true      
+  
+  WebUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref CognitoUserPool
+      ClientName: web
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      PreventUserExistenceErrors: ENABLED
+
+ Outputs:
+  CognitoUserPoolId:
+    Value: !Ref CognitoUserPool 
