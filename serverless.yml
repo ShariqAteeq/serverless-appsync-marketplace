@@ -5,9 +5,14 @@ provider:
   name: aws
   region: eu-west-1
   runtime: nodejs12.x
+  environment:
+    STAGE: ${self:custom.stage}
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
 
 plugins:
   - serverless-appsync-plugin
+  - serverless-iam-roles-per-function
+  - serverless-export-env
 
 package:
   exclude:
@@ -15,16 +20,31 @@ package:
     - package.json
 
 custom:
-  stage: ${opt:stage, self.provider.stage}
+  region: ${opt:region, self:provider.region}
+  stage: ${opt:stage, self:provider.stage}
+  # attach appsync file
   appSync:
     - ${file(serverless.appsync-api.yml)}
+
+# LAMBDA FUNCTIONS
+functions:
+  confirmUserSignup:
+    handler: functions/confirm-user-signup.handler
+    environment:
+      USERS_TABLE: !Ref UsersTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:PutItem
+        Resource: !GetAtt UsersTable.Arn
 
 resources:
  Resources:
 
+  # DYNAMODB_TABLES
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
+      BillingMode: PAY_PER_REQUEST
       KeySchema:
         - AttributeName: id
           KeyType: HASH
@@ -33,8 +53,11 @@ resources:
           AttributeType: S
       Tags:
         - Key: Environment
-          Value: value
+          Value: ${self:custom.stage}
+        - Key: Name
+          Value: users-table
 
+  # COGNITO CONFIGURE
   CognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
@@ -49,12 +72,25 @@ resources:
           RequireUppercase: false
       UsernameAttributes:
         - email
+      # add "name" attribue in cognito
       Schema:
         - AttributeDataType: String
           Name: name
           Required: false
-          Mutable: true      
+          Mutable: true
+      LambdaConfig:
+        PostConfirmation: !GetAtt ConfirmUserSignupLambdaFunction.Arn
+
+  # PostConfirmation lambda permission
+  UserPoolInvokeConfirmUserSignupLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:invokeFunction
+      FunctionName: !Ref ConfirmUserSignupLambdaFunction
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: !GetAtt CognitoUserPool.Arn      
   
+  # this allow user to login on fronend
   WebUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
@@ -67,5 +103,11 @@ resources:
       PreventUserExistenceErrors: ENABLED
 
  Outputs:
+  AwsRegion:
+    Value: ${self:custom.region}
+
   CognitoUserPoolId:
-    Value: !Ref CognitoUserPool 
+    Value: !Ref CognitoUserPool
+
+  WebCognitoPoolClientId:
+    Value: !Ref WebUserPoolClient
