@@ -1,0 +1,15 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "PutItem",
+    "key": {
+        "id" : $util.dynamodb.toDynamoDBJson($util.autoId()),
+    },
+    "attributeValues" : {
+        "name" : $util.dynamodb.toDynamoDBJson($context.arguments.name),
+        "active": $util.dynamodb.toDynamoDBJson(true),
+        "creator": $util.dynamodb.toDynamoDBJson($context.identity.username),
+    },
+    "condition" : {
+        "expression": "attribute_not_exists(id)"
+    },
+}

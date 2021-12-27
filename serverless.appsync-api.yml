@@ -7,12 +7,31 @@ userPoolConfig:
   userPoolId: !Ref CognitoUserPool
 mappingTemplatesLocation: mapping-templates
 mappingTemplates:
+  # Queries
   - type: Query
     field: getMyProfile
     dataSource: usersTable
   - type: Query
     field: getProfile
     dataSource: usersTable
+  
+  # Mutation
+  - type: Mutation
+    field: addCategory
+    dataSource: categoryTable
+  - type: Mutation
+    field: updateCategory
+    dataSource: categoryTable
+  - type: Mutation
+    field: deleteCategory
+    dataSource: categoryTable
+
+  # Nested Fields
+  - type: Category
+    field: creator
+    dataSource: usersTable
+    request: Category.creator.request.vtl
+    response: Category.creator.response.vtl
 
 dataSources:
   - type: NONE
@@ -21,3 +40,7 @@ dataSources:
     name: usersTable
     config:
       tableName: !Ref UsersTable
+  - type: AMAZON_DYNAMODB
+    name: categoryTable
+    config:
+      tableName: !Ref CategoryTable

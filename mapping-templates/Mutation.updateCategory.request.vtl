@@ -1,0 +1,20 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key": {
+        "id" : $util.dynamodb.toDynamoDBJson($context.arguments.id)
+    },
+    "update" : {
+        "expression" : "SET #name = :name, active = :active",
+        "expressionNames" : {
+           "#name" : "name"
+        },
+        "expressionValues" : {
+           ":name" : $util.dynamodb.toDynamoDBJson($context.arguments.name),
+           ":active" : $util.dynamodb.toDynamoDBJson($context.arguments.active)
+       },
+    },
+    "condition" : {
+        "expression": "attribute_exists(id)"
+    },
+}

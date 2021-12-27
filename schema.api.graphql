@@ -1,21 +1,146 @@
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type Query {
-    getMyProfile: Profile
-    getProfile(id: String!): Profile!
-}
-
-type Profile {
-    id: ID
-    name: String
-    image: String
-    bio: String
-    createdAt: AWSDateTime
+  getMyProfile: Profile
+  getProfile(id: String!): Profile!
+  listCategories: [Category]
+  listProducts: [Product]
+  getProduct(id: ID!): Product
+  listMyOrders: [Order]
 }
 
 type Mutation {
-    saveUser(id: ID): Boolean
+  addCategory(name: String!): Category
+  updateCategory(id: ID!, name: String!, active: Boolean!): Category
+  deleteCategory(id: ID!): Boolean
+  uploadProduct(input: UploadProductInput!): Product
+  updateProduct(input: UpdateProductInput!): Product
+  deleteProduct(id: ID!): Boolean
+  addToBasket(productId: ID!, userId: ID!, mode: BASKET_MODE): Basket
+  removeFromBasket(productId: ID!, userId: ID!, mode: BASKET_MODE): Basket
+  addReview(text: String!, productId: ID!, userId: ID!, ratings: Float!): Review
+  placeOrder(input: PlaceOrderInput!): Order
+  cancelOrder(id: ID!): Order
+  changeOrderStatus(id: ID!): Order
+  addShipper(name: String!, fee: Float, created: AWSDateTime): Shippers
+}
+
+type Order {
+  id: ID
+  orderItems: [OrderItem]
+  total: Float
+  payment: Payment
+  shippingAddress: String
+  userId: Profile
+  shipping: Shippers
+  status: ORDER_STATUS
+  created: AWSDateTime
+  updated: AWSDateTime
+}
+
+type Shippers {
+  id: ID
+  name: String
+  fee: Float
+}
+
+enum ORDER_STATUS {
+  ON_GOING
+  COMPLETED
+  DISPUTED
+}
+
+type OrderItem {
+  id: ID
+  order: Order
+  product: Product
+  quantity: Int
+}
+
+type Payment {
+  id: ID!
+  method: String
+  allowed: Boolean
+}
+input OrderItemInput {
+  productId: ID!
+  quantity: Int!
+}
+
+input PlaceOrderInput {
+  orderItems: [OrderItemInput]
+  userId: ID!
+  shippingId: ID!
+  shippingAddress: String
+  total: Float!
+  paymentId: ID!
+}
+
+enum BASKET_MODE {
+  CART
+  WISHLIST
+}
+
+type Basket {
+  id: ID
+  user: Profile
+  product: Product
+  created: AWSDateTime
+  updated: AWSDateTime
+}
+
+type Profile {
+  id: ID
+  name: String
+  image: String
+  bio: String
+  createdAt: AWSDateTime
+}
+
+input UploadProductInput {
+  name: String!
+  images: [String!]
+  category: String!
+  quantity: Int!
+  uploader: ID!
+}
+
+input UpdateProductInput {
+  id: ID!
+  name: String!
+  images: [String!]
+  category: String!
+  quantity: Int!
+  uploader: ID!
+}
+
+type Product {
+  id: ID
+  name: String
+  images: [String]
+  reviews: [Review]
+  category: Category
+  quantity: Int
+  available: Boolean
+  uploader: Profile
+  created: AWSDateTime
+  updated: AWSDateTime
+}
+
+type Review {
+  id: ID
+  product: Product
+  text: String
+  ratings: Float
+  creator: Profile
+}
+
+type Category {
+  id: ID
+  name: String
+  active: Boolean
+  creator: Profile
 }
