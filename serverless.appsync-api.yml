@@ -25,6 +25,11 @@ mappingTemplates:
   - type: Mutation
     field: deleteCategory
     dataSource: categoryTable
+  - type: Mutation
+    field: uploadProduct
+    dataSource: uploadProductFunction
+    request: false
+    response: false
 
   # Nested Fields
   - type: Category
@@ -32,6 +37,16 @@ mappingTemplates:
     dataSource: usersTable
     request: Category.creator.request.vtl
     response: Category.creator.response.vtl
+  - type: Product
+    field: uploader
+    dataSource: usersTable
+    request: Product.uploader.request.vtl
+    response: Product.uploader.response.vtl
+  - type: Product
+    field: category
+    dataSource: categoryTable
+    request: Product.category.request.vtl
+    response: Product.category.response.vtl
 
 dataSources:
   - type: NONE
@@ -44,3 +59,8 @@ dataSources:
     name: categoryTable
     config:
       tableName: !Ref CategoryTable
+  - type: AWS_LAMBDA
+    name: uploadProductFunction
+    config:
+      functionName: uploadProduct
+ 

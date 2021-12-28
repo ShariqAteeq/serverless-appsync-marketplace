@@ -37,6 +37,15 @@ functions:
         Action: dynamodb:PutItem
         Resource: !GetAtt UsersTable.Arn
 
+  uploadProduct:
+    handler: functions/upload-product.handler
+    environment:
+      PRODUCTS_TABLE: !Ref ProductsTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:PutItem
+        Resource: !GetAtt ProductsTable.Arn
+
 resources:
  Resources:
 
@@ -71,7 +80,23 @@ resources:
         - Key: Environment
           Value: ${self:custom.stage}
         - Key: Name
-          Value: category-table  
+          Value: category-table 
+
+  ProductsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      Tags:
+        - Key: Environment
+          Value: ${self:custom.stage}
+        - Key: Name
+          Value: products-table
 
   # COGNITO CONFIGURE
   CognitoUserPool:

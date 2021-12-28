@@ -4,8 +4,8 @@ schema {
 }
 
 type Query {
-  getMyProfile: Profile
-  getProfile(id: String!): Profile!
+  getMyProfile: Profile #done
+  getProfile(id: String!): Profile! #done
   listCategories: [Category]
   listProducts: [Product]
   getProduct(id: ID!): Product
@@ -13,10 +13,10 @@ type Query {
 }
 
 type Mutation {
-  addCategory(name: String!): Category
-  updateCategory(id: ID!, name: String!, active: Boolean!): Category
-  deleteCategory(id: ID!): Boolean
-  uploadProduct(input: UploadProductInput!): Product
+  addCategory(name: String!): Category  #done
+  updateCategory(id: ID!, name: String!, active: Boolean!): Category #done
+  deleteCategory(id: ID!): Boolean #done
+  uploadProduct(input: UploadProductInput!): Product #done
   updateProduct(input: UpdateProductInput!): Product
   deleteProduct(id: ID!): Boolean
   addToBasket(productId: ID!, userId: ID!, mode: BASKET_MODE): Basket
@@ -105,7 +105,7 @@ input UploadProductInput {
   images: [String!]
   category: String!
   quantity: Int!
-  uploader: ID!
+  # uploader: ID!
 }
 
 input UpdateProductInput {
