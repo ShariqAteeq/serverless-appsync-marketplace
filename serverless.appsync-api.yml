@@ -14,6 +14,15 @@ mappingTemplates:
   - type: Query
     field: getProfile
     dataSource: usersTable
+  - type: Query
+    field: listCategories
+    dataSource: categoryTable
+  - type: Query
+    field: listProducts
+    dataSource: productsTable
+  - type: Query
+    field: getProduct
+    dataSource: productsTable
   
   # Mutation
   - type: Mutation
@@ -59,6 +68,10 @@ dataSources:
     name: categoryTable
     config:
       tableName: !Ref CategoryTable
+  - type: AMAZON_DYNAMODB
+    name: productsTable
+    config:
+      tableName: !Ref ProductsTable
   - type: AWS_LAMBDA
     name: uploadProductFunction
     config:

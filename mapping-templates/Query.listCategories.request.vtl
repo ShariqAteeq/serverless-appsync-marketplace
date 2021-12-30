@@ -1,0 +1,15 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "active = :active",
+        "expressionValues" : {
+            ":active" : $util.dynamodb.toDynamoDBJson($context.args.active)
+        }
+    },
+    "index" : "byActive",
+    "limit" : 100,
+    "scanIndexForward" : false,
+    "consistentRead" : false,
+    "select" : "ALL_ATTRIBUTES",
+}

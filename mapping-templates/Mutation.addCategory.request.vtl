@@ -6,7 +6,7 @@
     },
     "attributeValues" : {
         "name" : $util.dynamodb.toDynamoDBJson($context.arguments.name),
-        "active": $util.dynamodb.toDynamoDBJson(true),
+        "active": $util.dynamodb.toDynamoDBJson("true"),
         "creator": $util.dynamodb.toDynamoDBJson($context.identity.username),
     },
     "condition" : {

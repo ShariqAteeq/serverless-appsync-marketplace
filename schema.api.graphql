@@ -6,15 +6,15 @@ schema {
 type Query {
   getMyProfile: Profile #done
   getProfile(id: String!): Profile! #done
-  listCategories: [Category]
-  listProducts: [Product]
-  getProduct(id: ID!): Product
+  listCategories(active: String): [Category] #done
+  listProducts(nextToken: String, limit: Int): ProductPage #done
+  getProduct(id: ID!): Product #done
   listMyOrders: [Order]
 }
 
 type Mutation {
   addCategory(name: String!): Category  #done
-  updateCategory(id: ID!, name: String!, active: Boolean!): Category #done
+  updateCategory(id: ID!, name: String!, active: String!): Category #done
   deleteCategory(id: ID!): Boolean #done
   uploadProduct(input: UploadProductInput!): Product #done
   updateProduct(input: UpdateProductInput!): Product
@@ -26,6 +26,11 @@ type Mutation {
   cancelOrder(id: ID!): Order
   changeOrderStatus(id: ID!): Order
   addShipper(name: String!, fee: Float, created: AWSDateTime): Shippers
+}
+
+type ProductPage {
+  nextToken: String
+  items: [Product]
 }
 
 type Order {
@@ -141,6 +146,6 @@ type Review {
 type Category {
   id: ID
   name: String
-  active: Boolean
+  active: String
   creator: Profile
 }

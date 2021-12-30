@@ -1,0 +1,8 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "Scan",
+    "limit" : $util.defaultIfNull($ctx.args.limit, 20),
+    "consistentRead" : false,
+    "nextToken" : $util.toJson($util.defaultIfNullOrEmpty($ctx.args.nextToken, null)),
+    "select": "ALL_ATTRIBUTES"
+}

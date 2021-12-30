@@ -76,6 +76,15 @@ resources:
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
+        - AttributeName: active
+          AttributeType: S
+      GlobalSecondaryIndexes:
+        - IndexName: byActive
+          KeySchema:
+            - AttributeName: active
+              KeyType: HASH
+          Projection:
+              ProjectionType: ALL
       Tags:
         - Key: Environment
           Value: ${self:custom.stage}
