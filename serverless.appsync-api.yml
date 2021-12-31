@@ -23,6 +23,9 @@ mappingTemplates:
   - type: Query
     field: getProduct
     dataSource: productsTable
+  - type: Query
+    field: listBasketItems
+    dataSource: basketTable
   
   # Mutation
   - type: Mutation
@@ -44,6 +47,15 @@ mappingTemplates:
     dataSource: addReviewFunction
     request: false
     response: false
+  - type: Mutation
+    field: addToBasket
+    dataSource: basketTable
+  - type: Mutation
+    field: removeFromBasket
+    dataSource: basketTable
+  - type: Mutation
+    field: changeBasketMode
+    dataSource: basketTable
 
   # Nested Fields
   - type: Category
@@ -86,6 +98,10 @@ dataSources:
     name: reviewsTable
     config:
       tableName: !Ref ReviewsTable
+  - type: AMAZON_DYNAMODB
+    name: basketTable
+    config:
+      tableName: !Ref BasketTable
   - type: AWS_LAMBDA
     name: uploadProductFunction
     config:

@@ -1,3 +1,7 @@
+#if ($context.source.reviews.size() == 0)
+  #return([])
+#end
+
 #set ($reviews = [])
 #foreach($item in $context.source.reviews)
     #set ($review = {})

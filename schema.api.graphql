@@ -10,6 +10,7 @@ type Query {
   listProducts(nextToken: String, limit: Int): ProductPage #done
   getProduct(id: ID!): Product #done
   listMyOrders: [Order]
+  listBasketItems(userId: ID!): [Basket] #done
 }
 
 type Mutation {
@@ -19,10 +20,11 @@ type Mutation {
   uploadProduct(input: UploadProductInput!): Product #done
   updateProduct(input: UpdateProductInput!): Product
   deleteProduct(id: ID!): Boolean
-  addToBasket(productId: ID!, userId: ID!, mode: BASKET_MODE): Basket
-  removeFromBasket(productId: ID!, userId: ID!, mode: BASKET_MODE): Basket
-  addReview(text: String!, productId: ID!, ratings: Float!): Review
-  placeOrder(input: PlaceOrderInput!): Order
+  addToBasket(productId: ID!, userId: ID!, mode: BASKET_MODE): Basket #done
+  changeBasketMode(id: ID!, mode: BASKET_MODE): Basket #done
+  removeFromBasket(id: ID!): Boolean #done
+  addReview(text: String!, productId: ID!, ratings: Float!): Review #done
+  placeOrder(input: PlaceOrderInput!): Order 
   cancelOrder(id: ID!): Order
   changeOrderStatus(id: ID!): Order
   addShipper(name: String!, fee: Float, created: AWSDateTime): Shippers
@@ -110,6 +112,7 @@ input UploadProductInput {
   images: [String!]
   category: String!
   quantity: Int!
+  price: Float!
   # uploader: ID!
 }
 
@@ -119,12 +122,14 @@ input UpdateProductInput {
   images: [String!]
   category: String!
   quantity: Int!
+  price: Float!
   uploader: ID!
 }
 
 type Product {
   id: ID
   name: String
+  price: Float
   images: [String]
   reviews: [Review]
   category: Category
