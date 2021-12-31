@@ -1,0 +1,17 @@
+#set ($reviews = [])
+#foreach($item in $context.source.reviews)
+    #set ($review = {})
+    #set ($review.id = $item)
+    $util.qr($reviews.add($util.dynamodb.toMapValues($review)))
+#end
+
+{
+    "version" : "2018-05-29",
+    "operation" : "BatchGetItem",
+    "tables" : {
+        "${ReviewsTable}": {
+           "keys": $util.toJson($reviews),
+           "consistentRead": false
+        },
+    }
+}

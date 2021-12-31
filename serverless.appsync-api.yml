@@ -39,6 +39,11 @@ mappingTemplates:
     dataSource: uploadProductFunction
     request: false
     response: false
+  - type: Mutation
+    field: addReview
+    dataSource: addReviewFunction
+    request: false
+    response: false
 
   # Nested Fields
   - type: Category
@@ -56,6 +61,11 @@ mappingTemplates:
     dataSource: categoryTable
     request: Product.category.request.vtl
     response: Product.category.response.vtl
+  - type: Product
+    field: reviews
+    dataSource: reviewsTable
+    request: Product.reviews.request.vtl
+    response: Product.reviews.response.vtl
 
 dataSources:
   - type: NONE
@@ -72,8 +82,18 @@ dataSources:
     name: productsTable
     config:
       tableName: !Ref ProductsTable
+  - type: AMAZON_DYNAMODB
+    name: reviewsTable
+    config:
+      tableName: !Ref ReviewsTable
   - type: AWS_LAMBDA
     name: uploadProductFunction
     config:
       functionName: uploadProduct
+  - type: AWS_LAMBDA
+    name: addReviewFunction
+    config:
+      functionName: addReview
  
+substitutions:
+  ReviewsTable: !Ref ReviewsTable

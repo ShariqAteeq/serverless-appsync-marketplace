@@ -45,6 +45,22 @@ functions:
       - Effect: Allow
         Action: dynamodb:PutItem
         Resource: !GetAtt ProductsTable.Arn
+  
+  addReview:
+    handler: functions/add-review.handler
+    environment:
+      PRODUCTS_TABLE: !Ref ProductsTable
+      REVIEWS_TABLE: !Ref ReviewsTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:PutItem
+        Resource: !GetAtt ReviewsTable.Arn
+      - Effect: Allow
+        Action: dynamodb:UpdateItem
+        Resource: !GetAtt ProductsTable.Arn
+      - Effect: Allow
+        Action: dynamodb:GetItem
+        Resource: !GetAtt ProductsTable.Arn
 
 resources:
  Resources:
@@ -106,6 +122,22 @@ resources:
           Value: ${self:custom.stage}
         - Key: Name
           Value: products-table
+  
+  ReviewsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      Tags:
+        - Key: Environment
+          Value: ${self:custom.stage}
+        - Key: Name
+          Value: reviews-table
 
   # COGNITO CONFIGURE
   CognitoUserPool:
