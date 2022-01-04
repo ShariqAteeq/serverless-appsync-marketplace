@@ -23,9 +23,9 @@ mappingTemplates:
   - type: Query
     field: getProduct
     dataSource: productsTable
-  - type: Query
-    field: listBasketItems
-    dataSource: basketTable
+  # - type: Query
+  #   field: listBasketItems
+  #   dataSource: basketTable
   
   # Mutation
   - type: Mutation
@@ -51,10 +51,10 @@ mappingTemplates:
     field: addToBasket
     dataSource: basketTable
   - type: Mutation
-    field: removeFromBasket
-    dataSource: basketTable
+    field: addShipper
+    dataSource: shipperTable
   - type: Mutation
-    field: changeBasketMode
+    field: removeFromBasket
     dataSource: basketTable
 
   # Nested Fields
@@ -102,6 +102,10 @@ dataSources:
     name: basketTable
     config:
       tableName: !Ref BasketTable
+  - type: AMAZON_DYNAMODB
+    name: shipperTable
+    config:
+      tableName: !Ref ShippperTable
   - type: AWS_LAMBDA
     name: uploadProductFunction
     config:

@@ -61,6 +61,22 @@ functions:
       - Effect: Allow
         Action: dynamodb:GetItem
         Resource: !GetAtt ProductsTable.Arn
+  
+  placeOrder:
+    handler: functions/place-order.handler
+    environment:
+      PRODUCTS_TABLE: !Ref ProductsTable
+      ORDERS_TABLE: !Ref OrderTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:PutItem
+        Resource: !GetAtt OrderTable.Arn
+      - Effect: Allow
+        Action: dynamodb:UpdateItem
+        Resource: !GetAtt ProductsTable.Arn
+      - Effect: Allow
+        Action: dynamodb:GetItem
+        Resource: !GetAtt ProductsTable.Arn
 
 resources:
  Resources:
@@ -144,10 +160,12 @@ resources:
     Properties:
       BillingMode: PAY_PER_REQUEST
       KeySchema:
-        - AttributeName: id
+        - AttributeName: productId
           KeyType: HASH
+        - AttributeName: userId
+          KeyType: RANGE
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: productId
           AttributeType: S
         - AttributeName: userId
           AttributeType: S
@@ -163,6 +181,38 @@ resources:
           Value: ${self:custom.stage}
         - Key: Name
           Value: basket-table
+  
+  OrderTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      Tags:
+        - Key: Environment
+          Value: ${self:custom.stage}
+        - Key: Name
+          Value: order-table
+  
+  ShippperTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      Tags:
+        - Key: Environment
+          Value: ${self:custom.stage}
+        - Key: Name
+          Value: shipper-table
 
   # COGNITO CONFIGURE
   CognitoUserPool:

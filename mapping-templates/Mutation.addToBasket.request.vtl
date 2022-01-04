@@ -1,18 +1,14 @@
-#set ($unsc = "_")
-#set ($id = "$context.arguments.userId$unsc$context.arguments.productId$unsc$context.arguments.mode")
-
 {
     "version" : "2018-05-29",
     "operation" : "PutItem",
     "key": {
-        "id" : $util.dynamodb.toDynamoDBJson($id),
+        "productId" : $util.dynamodb.toDynamoDBJson($context.arguments.productId),
+        "userId" : $util.dynamodb.toDynamoDBJson($context.arguments.userId),
     },
     "attributeValues" : {
-        "productId" : $util.dynamodb.toDynamoDBJson($context.arguments.productId),
-        "userId": $util.dynamodb.toDynamoDBJson($context.arguments.userId),
         "mode": $util.dynamodb.toDynamoDBJson($context.arguments.mode),
     },
-    "condition" : {
-        "expression": "attribute_not_exists(id)"
-    },
+    "condition": {
+    	"expression": "attribute_not_exists(productId) AND attribute_not_exists(userId)"
+    }
 }

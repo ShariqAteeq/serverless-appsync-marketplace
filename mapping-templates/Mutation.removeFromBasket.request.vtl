@@ -2,9 +2,10 @@
     "version" : "2018-05-29",
     "operation" : "DeleteItem",
     "key": {
-        "id" : $util.dynamodb.toDynamoDBJson($context.arguments.id),
+        "productId" : $util.dynamodb.toDynamoDBJson($context.arguments.productId),
+        "userId" : $util.dynamodb.toDynamoDBJson($context.arguments.userId),
     },
     "condition" : {
-       "expression": "attribute_exists(id)"
+       "expression": "attribute_exists(productId) AND attribute_exists(userId)"
     },
 }
