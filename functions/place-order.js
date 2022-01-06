@@ -1,34 +1,44 @@
 const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB.DocumentClient();
+const ULID = require("ulid");
 const { getProductByID } = require("../lib/products");
 
-const { PRODUCTS_TABLE, REVIEWS_TABLE } = process.env;
+const { PRODUCTS_TABLE, ORDERS_TABLE } = process.env;
 
 module.exports.handler = async (event) => {
-  const { text, productId, ratings } = event.arguments;
   const { username } = event.identity;
-  const reviewId = `${username}_${productId}`;
+  const { orderItems, shippingId, shippingAddress, total, paymentId } =
+    event.arguments;
+  const orderId = ULID.ulid();
 
-  const newReview = {
-    id: reviewId,
-    productId,
-    userId: username,
-    text,
-    ratings,
+  let payload = {
+    id: orderId,
+    total,
+    paymentId,
+    shippingAddress,
+    creator: username,
+    shippingId,
+    status: "PENDING",
+    created: new Date().toJSON(),
   };
 
+  if (orderItems.length) {
+    const items = orderItems.map((x) => ({ ...x, orderId }));
+    payload["orderItems"] = items;
+  }
+
   try {
+
     const product = await getProductByID(productId);
     if (!product) {
       throw new Error("Product Not Found");
     }
-    let reviews = [...product.reviews];
-    reviews.push(reviewId);
+
     const transactItems = [
       {
         Put: {
-          TableName: REVIEWS_TABLE,
-          Item: newReview,
+          TableName: ORDERS_TABLE,
+          Item: payload,
         },
       },
       {
@@ -47,8 +57,8 @@ module.exports.handler = async (event) => {
     ];
 
     await dynamodb.transactWrite({ TransactItems: transactItems }).promise();
-    return newReview;
+    return payload;
   } catch (error) {
-    console.log("Error", error);
+    throw new Error(error.message);
   }
 };

@@ -23,9 +23,9 @@ mappingTemplates:
   - type: Query
     field: getProduct
     dataSource: productsTable
-  # - type: Query
-  #   field: listBasketItems
-  #   dataSource: basketTable
+  - type: Query
+    field: listBasketItems
+    dataSource: basketTable
   
   # Mutation
   - type: Mutation

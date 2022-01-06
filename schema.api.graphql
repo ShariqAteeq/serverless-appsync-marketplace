@@ -10,7 +10,7 @@ type Query {
   listProducts(nextToken: String, limit: Int): ProductPage #done
   getProduct(id: ID!): Product #done
   listMyOrders: [Order]
-  # listBasketItems(userId: ID!): [Basket] #done
+  listBasketItems(userId: ID!): [Basket] #done
 }
 
 type Mutation {
@@ -31,7 +31,7 @@ type Mutation {
     name: String!
     fee: Float
     allowedCountries: [String]
-  ): Shippers
+  ): Shippers #done
 }
 
 type ProductPage {
@@ -45,7 +45,7 @@ type Order {
   total: Float
   payment: Payment
   shippingAddress: String
-  userId: Profile
+  creator: Profile
   shipping: Shippers
   status: ORDER_STATUS
   created: AWSDateTime
