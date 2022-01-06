@@ -56,6 +56,11 @@ mappingTemplates:
   - type: Mutation
     field: removeFromBasket
     dataSource: basketTable
+  - type: Mutation
+    field: placeOrder
+    dataSource: placeOrderFunction
+    request: false
+    response: false
 
   # Nested Fields
   - type: Category
@@ -114,6 +119,10 @@ dataSources:
     name: addReviewFunction
     config:
       functionName: addReview
+  - type: AWS_LAMBDA
+    name: placeOrderFunction
+    config:
+      functionName: placeOrder
  
 substitutions:
   ReviewsTable: !Ref ReviewsTable

@@ -74,9 +74,6 @@ functions:
       - Effect: Allow
         Action: dynamodb:UpdateItem
         Resource: !GetAtt ProductsTable.Arn
-      - Effect: Allow
-        Action: dynamodb:GetItem
-        Resource: !GetAtt ProductsTable.Arn
 
 resources:
  Resources:
