@@ -54,14 +54,17 @@ mappingTemplates:
     field: addToBasket
     dataSource: basketTable
   - type: Mutation
+    field: deleteProduct
+    dataSource: productsTable
+  - type: Mutation
     field: addShipper
     dataSource: shipperTable
   - type: Mutation
     field: removeFromBasket
     dataSource: basketTable
-  # - type: Mutation
-  #   field: changeOrderStatus
-  #   dataSource: orderTable
+  - type: Mutation
+    field: changeOrderStatus
+    dataSource: orderTable
   - type: Mutation
     field: placeOrder
     dataSource: placeOrderFunction

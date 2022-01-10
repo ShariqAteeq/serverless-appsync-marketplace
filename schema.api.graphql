@@ -18,15 +18,13 @@ type Mutation {
   updateCategory(id: ID!, name: String!, active: String!): Category #done
   deleteCategory(id: ID!): Boolean #done
   uploadProduct(input: UploadProductInput!): Product #done
-  updateProduct(input: UpdateProductInput!): Product
-  deleteProduct(id: ID!): Boolean
+  deleteProduct(id: ID!): Boolean #done
   addToBasket(productId: ID!, userId: ID!, mode: BASKET_MODE): Basket #done
   changeBasketMode(id: ID!, mode: BASKET_MODE): Basket #done
   removeFromBasket(productId: ID!, userId: ID!): Boolean #done
   addReview(text: String!, productId: ID!, ratings: Float!): Review #done
   placeOrder(input: PlaceOrderInput!): Order #done
-  cancelOrder(id: ID!): Order
-  changeOrderStatus(id: ID!, status: ORDER_STATUS!): Order
+  changeOrderStatus(id: ID!, status: ORDER_STATUS!): Order #done
   addShipper(
     name: String!
     fee: Float
