@@ -9,7 +9,7 @@ type Query {
   listCategories(active: String): [Category] #done
   listProducts(nextToken: String, limit: Int): ProductPage #done
   getProduct(id: ID!): Product #done
-  listMyOrders: [Order]
+  listMyOrders: [Order] #done
   listBasketItems(userId: ID!): [Basket] #done
 }
 
@@ -24,9 +24,9 @@ type Mutation {
   changeBasketMode(id: ID!, mode: BASKET_MODE): Basket #done
   removeFromBasket(productId: ID!, userId: ID!): Boolean #done
   addReview(text: String!, productId: ID!, ratings: Float!): Review #done
-  placeOrder(input: PlaceOrderInput!): Order
+  placeOrder(input: PlaceOrderInput!): Order #done
   cancelOrder(id: ID!): Order
-  changeOrderStatus(id: ID!): Order
+  changeOrderStatus(id: ID!, status: ORDER_STATUS!): Order
   addShipper(
     name: String!
     fee: Float
@@ -62,9 +62,9 @@ type Shippers {
 }
 
 enum ORDER_STATUS {
-  ON_GOING
-  COMPLETED
-  DISPUTED
+  PENDING
+  DELIVERED
+  CANCELLED
 }
 
 type OrderItem {

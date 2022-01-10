@@ -26,6 +26,9 @@ mappingTemplates:
   - type: Query
     field: listBasketItems
     dataSource: basketTable
+  - type: Query
+    field: listMyOrders
+    dataSource: orderTable
   
   # Mutation
   - type: Mutation
@@ -56,6 +59,9 @@ mappingTemplates:
   - type: Mutation
     field: removeFromBasket
     dataSource: basketTable
+  # - type: Mutation
+  #   field: changeOrderStatus
+  #   dataSource: orderTable
   - type: Mutation
     field: placeOrder
     dataSource: placeOrderFunction
@@ -83,6 +89,21 @@ mappingTemplates:
     dataSource: reviewsTable
     request: Product.reviews.request.vtl
     response: Product.reviews.response.vtl
+  - type: OrderItem
+    field: product
+    dataSource: productsTable
+    request: OrderItem.product.request.vtl
+    response: OrderItem.product.response.vtl
+  - type: Order
+    field: creator
+    dataSource: usersTable
+    request: Category.creator.request.vtl
+    response: Category.creator.response.vtl
+  - type: Order
+    field: shipping
+    dataSource: shipperTable
+    request: Order.shipping.request.vtl
+    response: Order.shipping.response.vtl
 
 dataSources:
   - type: NONE
@@ -111,6 +132,10 @@ dataSources:
     name: shipperTable
     config:
       tableName: !Ref ShippperTable
+  - type: AMAZON_DYNAMODB
+    name: orderTable
+    config:
+      tableName: !Ref OrderTable
   - type: AWS_LAMBDA
     name: uploadProductFunction
     config:

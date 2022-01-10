@@ -1,0 +1,15 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "Query",
+    "query" : {
+        "expression" : "creator = :creator",
+        "expressionValues" : {
+            ":creator" : $util.dynamodb.toDynamoDBJson($context.identity.username)
+        }
+    },
+    "index" : "byUser",
+    "limit" : 100,
+    "scanIndexForward" : false,
+    "consistentRead" : false,
+    "select" : "ALL_ATTRIBUTES",
+}

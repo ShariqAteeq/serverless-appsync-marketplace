@@ -37,6 +37,7 @@ module.exports.handler = async (event) => {
     ];
 
     if (orderItems.length) {
+      let qunat = x.quantity
       for (const x of orderItems) {
         transactItems.push({
           Update: {
@@ -46,7 +47,7 @@ module.exports.handler = async (event) => {
             },
             UpdateExpression: "ADD quantity :minusOne",
             ExpressionAttributeValues: {
-              ":minusOne": -x.quantity,
+              ":minusOne": -Math.abs(qunat),
             },
             ConditionExpression: "attribute_exists(id)",
           },

@@ -189,6 +189,15 @@ resources:
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
+        - AttributeName: creator
+          AttributeType: S
+      GlobalSecondaryIndexes:
+        - IndexName: byUser
+          KeySchema:
+            - AttributeName: creator
+              KeyType: HASH
+          Projection:
+              ProjectionType: ALL
       Tags:
         - Key: Environment
           Value: ${self:custom.stage}
